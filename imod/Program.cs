@@ -21,7 +21,7 @@ namespace imod
             foreach (var file in dir.GetFiles("home-250-*-60.csv"))
 //            foreach (var file in dir.GetFiles("home-500-3-60.csv"))
             {
-//                scenarios.runScenario1(file.FullName);
+                scenarios.runScenario1(file.FullName);
                 scenarios.runScenario2(file.FullName);
 //                scenarios.runScenario3(file.FullName);
 //                scenarios.runScenario4(file.FullName);

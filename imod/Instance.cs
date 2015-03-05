@@ -30,6 +30,8 @@ namespace imod
         public bool immediate = false;
         public bool rejected = false;
 
+        public double weight = 1;
+
         public double waitTime()
         {
             if (!immediate) return 0;

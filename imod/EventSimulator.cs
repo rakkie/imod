@@ -383,7 +383,9 @@ namespace imod
 
             if (p.sortByDistance == true)
             {
-                int count = 0;
+                int count = 1;
+
+
 
                 foreach (Customer i in inst.customers.Values.OrderBy(o=>inst.dist(o.id,0)))
                 {
@@ -395,8 +397,12 @@ namespace imod
                     i.rejected = false;
                     i.immediate = false;
 
-                    double pos = (double)count / (inst.customers.Count-1);
+                    double pos = (inst.customers.Count-1) / (double) count;
 
+                    double u = rnd.NextDouble();
+                    i.weight = Math.Pow(u, 1.0 / pos);
+                    
+                    /*
                     if (i.id == p.flip1)
                     {
                         // set p.flip1 to advance
@@ -410,14 +416,23 @@ namespace imod
                         i.bookedTime = i.requestTime;
                         i.immediate = true;
                     }
-                    else if ((pos != 0) && (rnd.NextDouble() < Math.Pow(ratio,pos)))
+                     */
+                    count++;
+                }
 
-//                  else if (((double)count / inst.customers.Count) <= ratio)
+                count = 0;
+                foreach (Customer i in inst.customers.Values.OrderByDescending(o => o.weight)) {
+                    // Console.WriteLine("ID: " + i.id + " Weight: " + i.weight + " Distance: " + inst.dist(i.id, 0));
+                    if (i.id == 0) continue;
+
+                    if ((double)count / inst.customers.Count < ratio)
                     {
                         events.Enqueue(new Event(i.requestTime, EventType.Immediate, i.id, 0), i.requestTime);
                         i.bookedTime = i.requestTime;
                         i.immediate = true;
                         immediate++;
+                        count++;
+                        // Console.WriteLine("ID: " + i.id + " Weight: " + i.weight + " Distance: " + inst.dist(i.id, 0));
                     }
                     else
                     {
@@ -425,9 +440,8 @@ namespace imod
                         i.bookedTime = i.requestTime - advanceTime;
                         advance++;
                     }
-
-                    count++;
                 }
+
            
             }
             else
